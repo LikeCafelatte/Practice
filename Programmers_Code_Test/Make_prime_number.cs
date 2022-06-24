@@ -42,4 +42,19 @@ class Solution
             }
         }
     }
+
+    public int PrimeCheck(int num){
+        if(num <= 1)
+            return 0;
+        if(num == 2 || num == 3)
+            return 1;
+        if(num == 4)
+            return 0;
+        
+        for(int i = 2; Math.Pow(i, 2) < num; i++){
+            if(num % i == 0)
+                return 0;
+        }
+        return 1;
+    }
 }
