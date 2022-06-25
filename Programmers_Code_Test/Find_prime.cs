@@ -46,14 +46,14 @@ public class Solution {
         return true;
     }
 
-    public void Permutation(List<int> list, int start, int end){
         List<int> temp = new List<int>();
-        if(start == end){
+    public void Permutation(List<int> list, int start){
+        if(start == list.Length - 1){
             int count = 1;
-            list.Select(i => i*(count*=10)).Sum();
+            temp.Select(i => i*(count*=10)).Sum();
         }
         else{
-            for(int i = start; i < end; i++){
+            for(int i = start; i < list.Length; i++){
                 int temp = list[start];
                 list[start] = list[i];
                 list[i] = temp;
