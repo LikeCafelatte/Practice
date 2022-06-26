@@ -15,6 +15,8 @@ public class Solution {
             distance++;
             List<int> tempList = new List<int>();
             List<int> addList = new List<int>();
+            Queue<int> q = new Queue<int>();
+            q.Enqueue(temp);
             foreach(int current in currentList){
                 for(int i = 0; i < edge.GetLength(0); i++){
                     if(edge[i, 0] - 1 == current && !check[edge[i, 1] - 1]){
