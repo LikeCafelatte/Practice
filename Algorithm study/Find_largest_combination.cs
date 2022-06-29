@@ -13,9 +13,13 @@ public class Solution {
         foreach(List<int> numList in numbersList){
             numbersDictionary[numList[0]].Add(numList);
         }
-        for(int i = 9; i>= 0; i--){
-            for(int j = 0; j < numbersDictionary[i].Count() - 1; j++){
-                
+        
+        foreach(List<int> numList in numbersDictionary){
+            for(int i = 1; i < numList.Count(); i++){
+                int k = i;
+                while(k > 0 && !isSortingDone(numList, k)){
+
+                }
             }
         }
         for(int i = 9; i>= 0; i--){
@@ -35,5 +39,17 @@ public class Solution {
         }
         stack.Push(num);
         return stack.ToList();
+    }
+
+    public bool isSortingDone(List<int> numList, int k){
+        if(k == 0)
+            return true;
+        if(numList[k - 1].Count() > numList[k].Count()){
+            for(int i = 1; i < numList[k].Count(); i++){
+                if(numList[k - 1][i] > numList[k][i]) return false;
+                if(numList[k - 1][i] < numList[k][i]) return true; 
+            }
+            if(numList[k - 1][numList[k].Count() > ])
+        }
     }
 }
