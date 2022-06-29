@@ -1,17 +1,16 @@
 using System;
-using System.Collections;
+using System.Text;
 using System.Collections.Generic;
-using System.Linq;
 
 public class Solution {
     public string solution(int[] numbers) {
-        string answer = "";
-        var numbersList = numbers.OrderByDescending(n => n, new ComparerClass());
-        foreach(int num in numbersList){
-            answer+=num.ToString();
+        StringBuilder myStringBuilder = new StringBuilder("");
+        Array.Sort(numbers, new ComparerClass());
+        foreach(int num in numbers){
+            myStringBuilder.Append(num);
         }
-        if(numbersList.Max() == 0) return "0";
-        return answer;
+        if(numbers[0] == 0) return "0";
+        return myStringBuilder.ToString();
     }
     
     public class ComparerClass : IComparer<int>
@@ -20,8 +19,8 @@ public class Solution {
             long origin = long.Parse(x.ToString() + y.ToString());
             long reverse = long.Parse(y.ToString() + x.ToString());
             
-            if(origin > reverse) return 1;
-            if(origin < reverse) return -1;
+            if(origin > reverse) return -1;
+            if(origin < reverse) return 1;
             if(origin == reverse) return 0;
             return 0;
         }
