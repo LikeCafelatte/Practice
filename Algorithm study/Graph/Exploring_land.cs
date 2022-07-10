@@ -36,7 +36,6 @@ public class Solution {
                 }
             }
         }
-        
         //Kruskal algorithm
         //다른 그룹의 땅들과 인접한 곳에서 엣지 정보 추출
         Queue<KeyValuePair<int[], int>> temp_q_node = new Queue<KeyValuePair<int[], int>>();
@@ -56,20 +55,8 @@ public class Solution {
                     new int[2] {l.group_id, group_map[l.x, l.y + 1]} : new int[2] {group_map[l.x, l.y + 1], l.group_id}), l.gap[3]));
         }
         
-        //중복 엣지는 최소비용만 남기고 제거
-        temp_q_node = new Queue<KeyValuePair<int[], int>> (temp_q_node.OrderBy(arr => arr, new ComparerClass()));
-        int[] temp_key = new int[2];
-        int temp_value = 0;
-        List<KeyValuePair<int[], int>> node_list = new List<KeyValuePair<int[], int>>();
-        while(temp_q_node.Count > 0){
-            var dq = temp_q_node.Dequeue();
-            if(!temp_key.SequenceEqual(dq.Key)){
-                node_list.Add(dq);
-            }
-            temp_key = dq.Key;
-        }
         //비용 기준 오름차순 정렬
-        node_list = node_list.OrderBy(kv => kv.Value).ToList();
+        List<KeyValuePair<int[], int>> node_list = temp_q_node.OrderBy(kv => kv.Value).ToList();
         
         //kruskal algorithm 수행
         int[] parent = new int[count + 1];
@@ -114,14 +101,14 @@ public class Solution {
             this.y = y;
             this.height = land[x, y];
             this.group_id = group_id;
-            gap = new int[4] {10000, 10000, 10000, 10000};
+            gap = new int[4] {10001, 10001, 10001, 10001};
             if(this.x > 0) gap[0] = (land[x - 1, y] - height > 0 ? land[x - 1, y] - height : height - land[x - 1, y]);
             if(this.x < land.GetLength(0) - 1) gap[1] = (land[x + 1, y] - height > 0 ? land[x + 1, y] - height : height - land[x + 1, y]);
             if(this.y > 0) gap[2] = (land[x, y - 1] - height > 0 ? land[x, y - 1] - height : height - land[x, y - 1]);
             if(this.y < land.GetLength(1) - 1) gap[3] = (land[x, y + 1] - height > 0 ? land[x, y + 1] - height : height - land[x, y + 1]);
             
             for(int i = 0; i < 4; i++){
-                if(gap[i] != 10000 && gap[i] > threshold){
+                if(gap[i] != 10001 && gap[i] > threshold){
                     isBordered = true;
                     isBorderline[i] = true;
                 }
@@ -148,20 +135,6 @@ public class Solution {
             b = GetParent(parent, b);
             if(a == b) return true;
             else return false;
-        }
-    }
-
-    
-    public class ComparerClass : IComparer<KeyValuePair<int[], int>>
-    {
-        public int Compare(KeyValuePair<int[], int> x, KeyValuePair<int[], int> y){
-            for(int i = 0; i < 2; i++){
-                if(x.Key[i] > y.Key[i]) return 1;
-                if(x.Key[i] < y.Key[i]) return -1;
-            }
-            if(x.Value > y.Value) return 1;
-            if(x.Value < y.Value) return -1;
-            return 0;
         }
     }
 }
