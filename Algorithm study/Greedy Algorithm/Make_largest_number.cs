@@ -1,31 +1,26 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 public class Solution {
     public string solution(string number, int k) {
-        string answer = "";
-        var number_list = number.ToCharArray().Select(c => int.Parse(c.ToString())).ToList();
-        int start = 0;
-        int max = number_list.Max();
-        while(k > 0){
-            for(int i = start; i < number_list.Count - 1; i++){
-                if(number_list[0] == max && number_list[i] == max && i - start == 1) start = i;
-                if(number_list[i] < number_list[i + 1]){
-                    number_list.RemoveAt(i);
-                    k--;
-                    break;
-                }
-                if(i == number_list.Count - 2){
-                    for(int j = 0; j < k; j++){
-                        number_list.RemoveAt(i + 1 - j);
-                    }
-                    k = 0;
-                }
+        int length = number.Length - k;
+        char[] char_number = number.ToCharArray();
+        Stack<char> stack = new Stack<char>();
+        foreach(char c in char_number){
+            while(stack.Count > 0 && stack.Peek() < c && k > 0){
+                stack.Pop();
+                k--;
             }
-            if(k == 0) break;
+            stack.Push(c);
         }
-        answer = string.Join("", number_list);
-        return answer;
+        StringBuilder myStringBuilder = new StringBuilder("");
+        char_number = stack.Reverse().ToArray();
+        
+        for(int i = 0; i < length; i++){
+            myStringBuilder.Append(char_number[i]);
+        }
+        return myStringBuilder.ToString();
     }
 }
