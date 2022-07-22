@@ -7,50 +7,57 @@ class Solution
     public int solution(int N, int[,] road, int K)
     {
         int answer = 0;
-        int[] lengths = new int[N + 1];
-        lengths[0] = 500001;
+        Town[] towns = new Town[N + 1];
+        for(int i = 0; i < N + 1; i++){
+            towns[i] = new Town(i);
+        }
                 
         Queue<int[]> q_total = new Queue<int[]>();
-        Queue<int[]> q = new Queue<int[]>();
+        Queue<Town> q = new Queue<Town>();
         for(int i = 0; i < road.GetLength(0); i++){
-            if(road[i,0] == 1 || road[i,1] == 1){
-                q.Enqueue(new int[] {road[i,0], road[i,1], road[i,2], 1});
-                continue;
-            }
             q_total.Enqueue(new int[] {road[i,0], road[i,1], road[i,2]});
         }
+        q.Enqueue(towns[1]);
+        
         int node = 1;
-        int new_node = 0;
-        int idx = 0;
         while(q.Count > 0){
+            q = new Queue<Town>(q.OrderBy(t => t.distance));
             var dq = q.Dequeue();
-            Console.WriteLine(dq[0] + ", " + dq[1] + ", " + dq[2] + ", " + dq[3]);
-            node = dq[3];
-            if(dq[0] == node) idx = 1;
-            else idx = 0;
-            new_node = dq[idx];
-            if(lengths[(idx + 1) % 2] == 0 || lengths[node] + dq[2] < lengths[(idx + 1) % 2]){
-                lengths[(idx + 1) % 2] = lengths[node] + dq[2];
-            }
+            node = dq.id;
+            
             int length = q_total.Count;
-            if(length == 0) break;
+            if(length == 0) continue;
             for(int i = 0; i < length; i++){
                 var dq_total = q_total.Dequeue();
-                if(dq_total[0] == new_node || dq_total[1] == new_node){
-                    if(dq_total[0] == node) q.Enqueue(new int[]{dq_total[0], dq_total[1], dq_total[2], dq_total[1]});
-                    else q.Enqueue(new int[]{dq_total[0], dq_total[1], dq_total[2], dq_total[0]});
+                if(dq_total[0] == node || dq_total[1] == node){
+                    if(dq_total[0] == node && (towns[dq_total[1]].distance == 0 || 
+                        towns[node].distance + dq_total[2] < towns[dq_total[1]].distance)){
+                        towns[dq_total[1]].distance = towns[node].distance + dq_total[2];
+                        q.Enqueue(towns[dq_total[1]]);
+                    }
+                    else if(dq_total[1] == node && (towns[dq_total[0]].distance == 0 || 
+                        towns[node].distance + dq_total[2] < towns[dq_total[0]].distance)){
+                        towns[dq_total[0]].distance = towns[node].distance + dq_total[2];
+                        q.Enqueue(towns[dq_total[0]]);
+                    }
                     continue;
                 }
                 q_total.Enqueue(dq_total);
-                
             }
             
         }
-        // [실행] 버튼을 누르면 출력 값을 볼 수 있습니다.
-        for(int i = 0; i < lengths.Length; i++){
-            System.Console.WriteLine(lengths[i]);
+        
+        return towns.Where(t => t.distance <= K).Count();
+    }
+    
+    public class Town{
+        public int id;
+        public int distance;
+        
+        public Town(int id){
+            this.id = id;
+            if(id == 0) distance = 500001;
+            else distance = 0;
         }
-
-        return lengths.Where(n => n <= K).Count() - 1;
     }
 }
