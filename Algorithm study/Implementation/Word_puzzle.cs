@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Collections.Generic;
 
 public class Solution {
     Dictionary<string, bool> dict_strs = new Dictionary<string, bool>();
