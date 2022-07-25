@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 
 public class Solution {
-    Dictionary<string, bool> dict_strs = new Dictionary<string, bool>();
     public int solution(string[] strs,string t){
         int answer = -1;
         int[] count_arr = t.ToCharArray().Select(c => t.Length + 1).ToArray();
