@@ -7,16 +7,14 @@ public class Solution {
         int[] count_arr = t.ToCharArray().Select(c => t.Length + 1).ToArray();
         for(int i = 0; i < t.Length; i++){
             for(int j = 0; j < strs.Length; j++){
-                if(t.Substring(i, strs[j].Length).Equals(strs[j])){
-                    if(i < strs[j].Length){
-                        count_arr[i] = 1;
-                    }else{
-                        count_arr[i] = (count_arr[i] > 1 + count_arr[i - strs[j].Length] ? 1 + count_arr[i - strs[j].Length] : count_arr[i]);
-                    }
+                if(i + strs[j].Length <= t.Length && t.Substring(i, strs[j].Length).Equals(strs[j])){
+                    if(i == 0) count_arr[i + strs[j].Length - 1] = 1;
+                    else count_arr[i + strs[j].Length - 1] = (count_arr[i + strs[j].Length - 1] > 1 + count_arr[i - 1] ? 
+                                                              1 + count_arr[i - 1] : count_arr[i + strs[j].Length - 1]);
                 }
             }
         }
-        answer = (count_arr.Max() > t.Length ? answer : count_arr.Max());
+        answer = (count_arr[t.Length - 1] > t.Length ? answer : count_arr[t.Length - 1]);
         return answer;
     }
  }
