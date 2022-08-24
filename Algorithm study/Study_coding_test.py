@@ -1,29 +1,12 @@
 def solution(alp, cop, problems):
-    answer = 0
-    learning_time = 0#min([max(problem[0] - alp + problem[1] - cop, 0) for problem in problems]) - 1
-    learnables = [[0, 0, 1, 0, 1], [0, 0, 0, 1, 1]]
-    while len(problems) > 0 :
-        #print(learning_time)
-        next_step = []
-        remain_time = -1
-        for learnable in learnables:
-            temp_time = 2000#min([max((problem[0] - alp) // learnable[2] + min((problem[0] - alp) % learnable[2], 1), (problem[1] - cop) // learnable[3] + min((problem[1] - cop) % learnable[3], 1), 0) if not (problem[0] - alp > 0 and learnable[2] == 0) or (problem[1] - cop > 0 and learnable[3] == 0) else 2000 for problem in problems]) * learnable[4]
+    alp_max = max([problem[0] for problem in problems])
+    cop_max = max([problem[1] for problem in problems])
+    dp = [[x + y for x, y in zip([c - cop if cop < c else 0 for c in range(cop_max+1)], [a - alp if alp < a else 0] * max(alp_max+1, cop_max + 1))] for a in range(alp_max+1)]
+
+    for i in range(alp if alp < alp_max else alp_max, alp_max + 1):
+        for j in range(cop if cop < cop_max else cop_max, cop_max + 1):
             for problem in problems:
-                temp_time = min(temp_time, max((problem[0] - alp) // learnable[2] + min((problem[0] - alp) % learnable[2], 1) if learnable[2] > 0 else 0 if problem[0] - alp <= 0 else 2000, (problem[1] - cop) // learnable[3] + min((problem[1] - cop) % learnable[3], 1) if learnable[3] > 0 else 0 if problem[1] - cop <= 0 else 2000, 0))
-            if remain_time < 0 or remain_time > temp_time:
-                remain_time = temp_time
-                next_step = learnable
-        print(remain_time, ", ", alp, ", ", cop, ", ", next_step)
-        alp += next_step[2]
-        cop += next_step[3]
-        learning_time += next_step[4]
-        
-        for problem in problems:
-            if problem[0] <= alp and problem[1] <= cop:
-                problems.remove(problem)
-                for learnable in learnables:
-                    if learnable[2] >= problem[2] and learnable[3] >= problem[3] and learnable[4] <= problem[4]:
-                        learnables.remove(learnable)
-                if problem[2] >= problem[4] or problem[3] >= problem[4]:
-                    learnables.append(problem)
-    return learning_time
+                if i>= problem[0] and j>= problem[1]:
+                    dp[min(i + problem[2], alp_max)][min(j + problem[3], cop_max)] = min(dp[min(i + problem[2], alp_max)][min(j + problem[3], cop_max)], dp[i][j] + problem[4])
+
+    return dp[alp_max][cop_max]
