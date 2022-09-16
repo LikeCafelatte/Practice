@@ -1,3 +1,6 @@
+// 징검다리
+// https://school.programmers.co.kr/learn/courses/30/lessons/43236
+
 using System;
 using System.Linq;
 using System.Collections.Generic;
