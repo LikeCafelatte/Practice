@@ -1,0 +1,36 @@
+# 양궁대회
+# https://school.programmers.co.kr/learn/courses/30/lessons/92342
+
+def solution(n, info):
+    answer = info[:]
+    ryan = [i + 1 for i in info]
+    high_score = -1
+    cases = []
+    for i in range(2**10):
+        cases.append(bin(i)[2:].zfill(10))
+    count = 0
+    for case in cases:
+        temp_arr, temp_n, temp_sum = [], n, 0
+        for i in range(10):
+            temp_arr.append(ryan[i])
+            if case[i] == '1':
+                temp_n -= ryan[i]
+                temp_sum += 10 - i
+            elif info[i] > 0:
+                temp_sum -= 10 - i
+            if temp_n < 0:
+                break
+        else:
+            count += 1
+            if high_score < temp_sum:
+                high_score = temp_sum
+                answer = [ryan[i] if case[i] == '1' else 0 for i in range(10)] + [temp_n]
+            elif high_score == temp_sum:
+                temp = [ryan[i] if case[i] == '1' else 0 for i in range(10)] + [temp_n]
+                for i in range(10, -1, -1):
+                    if temp[i] > answer[i]:
+                        answer = temp
+                        break
+                    elif temp[i] < answer[i]:
+                        break
+    return answer if high_score > 0 else [-1]
