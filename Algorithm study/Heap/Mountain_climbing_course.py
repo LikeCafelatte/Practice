@@ -1,161 +1,46 @@
-from heapq import heappush, heappop
-def solution(n, paths, gates, summits):
-    answer = [50001, 10000001]
-    intensities = {summit: [10000001 for _ in range(n + 1)] for summit in summits}
-    paths_dict = {}
-    for path in paths:
-        if path[0] in paths_dict:
-            paths_dict[path[0]].append([path[1], path[2]])
-        else:
-            paths_dict[path[0]] = [[path[1], path[2]]]
-        if path[1] in paths_dict:
-            paths_dict[path[1]].append([path[0], path[2]])
-        else:
-            paths_dict[path[1]] = [[path[0], path[2]]]
-    
-    result = 10000001
-    for summit in summits:
-        heap = []
-        current = summit
-        for next_path in paths_dict[current]:
-            heappush(heap, (next_path[1], current, next_path, next_path[1]))
-        while len(heap) > 0:
-            dq = heappop(heap)
-            parent = dq[1]
-            current = dq[2][0]
-            intensity = dq[3]
-            intensities[summit][current] = min(intensities[summit][current], intensity)
-            if current in summits or intensity >= result:
-                continue
-            if current in gates:
-                result = min(result, intensity)
-                continue
-            for next_path in paths_dict[current]:
-                if next_path[0] != parent and intensities[summit][next_path[0]] > next_path[1]:
-                    heappush(heap, (next_path[1], current, next_path, max(intensity, next_path[1])))
-        
-        if answer[1] > result:
-            answer = [summit, result]
-    
-    return answer
-
-from heapq import heappush, heappop
-def solution(n, paths, gates, summits):
-    answer = [50001, 10000001]
-    distances = {summit: [10000001 for _ in range(n + 1)] for summit in summits}
-    paths_dict = {}
-    for path in paths:
-        if path[0] in paths_dict:
-            paths_dict[path[0]].append([path[1], path[2]])
-        else:
-            paths_dict[path[0]] = [[path[1], path[2]]]
-        if path[1] in paths_dict:
-            paths_dict[path[1]].append([path[0], path[2]])
-        else:
-            paths_dict[path[1]] = [[path[0], path[2]]]
-    
-    result = 10000001
-    for summit in summits:
-        heap = []
-        current = summit
-        for next_path in paths_dict[current]:
-            heappush(heap, (next_path[1], current, next_path, next_path[1]))
-        while len(heap) > 0:
-            dq = heappop(heap)
-            parent = dq[1]
-            current = dq[2][0]
-            intensity = dq[3]
-            distances[summit][current] = min(distances[summit][current], dq[0])
-            if current in summits or intensity >= result:
-                continue
-            if current in gates:
-                result = min(result, intensity)
-                continue
-            for next_path in paths_dict[current]:
-                if next_path[0] != parent and distances[summit][next_path[0]] > next_path[1]:
-                    heappush(heap, (next_path[1], current, next_path, max(intensity, next_path[1])))
-        
-        if answer[1] > result:
-            answer = [summit, result]
-    
-    return answer
-
+# 등산코스 정하기
+# https://school.programmers.co.kr/learn/courses/30/lessons/118669
 
 from heapq import heappush, heappop
 def solution(n, paths, gates, summits):
     answer = [50001, 10000001]
     intensities = [10000001 for _ in range(n + 1)]
-    paths_dict = {}
-    for path in paths:
-        if path[0] in paths_dict:
-            paths_dict[path[0]].append([path[1], path[2]])
-        else:
-            paths_dict[path[0]] = [[path[1], path[2]]]
-        if path[1] in paths_dict:
-            paths_dict[path[1]].append([path[0], path[2]])
-        else:
-            paths_dict[path[1]] = [[path[0], path[2]]]
-    
-    result = 10000001
+    paths_dict = {i:[] for i in range(n + 1)}
+    for i, j, w in paths:
+        paths_dict[i].append([j, w])
+        paths_dict[j].append([i, w])
+    q = []
     for gate in gates:
-        heap = []
-        current = gate
-        for next_path in paths_dict[current]:
-            heappush(heap, (next_path[1], current, next_path, next_path[1]))
-        while len(heap) > 0:
-            dq = heappop(heap)
-            parent = dq[1]
-            current = dq[2][0]
-            intensity = dq[3]
-            intensities[current] = min(intensities[current], intensity)
-            if current in gates or current in summits or intensity >= result:
+        intensities[gate] = 0
+        for j, w in paths_dict[gate]:
+            heappush(q, node(gate, j, w))
+    while q:
+        n = heappop(q)
+        i, j, w = n.i, n.j, n.w
+        if w > answer[1]:
+            break
+        if intensities[j] > 10000000:
+            intensities[j] = max(intensities[i], w)
+            if j in summits:
+                if answer[1] > intensities[j]:
+                    answer = [j, intensities[j]]
+                elif answer[1] == intensities[j]:
+                    answer[0] = min(answer[0], j)
+                else:
+                    break
                 continue
-            for next_path in paths_dict[current]:
-                if next_path[0] != parent and intensities[next_path[0]] > next_path[1]:
-                    heappush(heap, (next_path[1], current, next_path, max(intensity, next_path[1])))
-    for summit in summits:
-        if answer[1] > result:
-            answer = [summit, result]
-    
+            for path in paths_dict[j]:
+                if intensities[path[0]] > 10000000:
+                    heappush(q, node(j, path[0], path[1]))
     return answer
+class node:
+    def __init__(self, i, j, w):
+        self.i, self.j, self.w = i, j, w
 
-from heapq import heappush, heappop
-def solution(n, paths, gates, summits):
-    answer = [50001, 10000001]
-    intensities = [10000001 for _ in range(n + 1)]
-    paths_dict = {}
-    for path in paths:
-        if path[0] in paths_dict:
-            paths_dict[path[0]].append([path[1], path[2]])
+    def __lt__(self, other):
+        if self.w < other.w:
+            return True
+        elif self.w == other.w and self.j < other.j:
+            return True
         else:
-            paths_dict[path[0]] = [[path[1], path[2]]]
-        if path[1] in paths_dict:
-            paths_dict[path[1]].append([path[0], path[2]])
-        else:
-            paths_dict[path[1]] = [[path[0], path[2]]]
-    
-    result = 10000001
-    heap = []
-    for gate in gates:
-        current = gate
-        for next_path in paths_dict[current]:
-            heappush(heap, (next_path[1], current, next_path, next_path[1]))
-    while len(heap) > 0:
-        dq = heappop(heap)
-        parent = dq[1]
-        current = dq[2][0]
-        intensity = dq[3]
-        intensities[current] = min(intensities[current], intensity)
-        if current in gates or intensity > result:
-            continue
-        if current in summits:
-            result = intensities[current]
-            continue
-        for next_path in paths_dict[current]:
-            if next_path[0] != parent and intensities[next_path[0]] > max(intensity, next_path[1]):
-                heappush(heap, (next_path[1], current, next_path, max(intensity, next_path[1])))
-    for summit in summits:
-        if answer[1] > intensities[summit]:
-            answer = [summit, intensities[summit]]
-            
-    return answer
+            return False
