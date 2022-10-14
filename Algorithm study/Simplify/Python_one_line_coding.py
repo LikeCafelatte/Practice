@@ -160,3 +160,18 @@ def solution(x, n):
 
 def solution(a, b):
     return sum(range(a, b + 1)) if a < b else sum(range(b, a + 1))
+
+
+# 최고의 집합
+# https://school.programmers.co.kr/learn/courses/30/lessons/12938
+
+def solution(n, s):
+    return [-1] if s < n else [s // n] * (n - s % n) + [s // n + 1] * (s % n)
+
+
+# 기지국 설치
+# https://school.programmers.co.kr/learn/courses/30/lessons/12979?language=python3
+
+import math
+def solution(n, stations, w):
+    return sum(math.ceil((stations[i + 1] - stations[i] - 2 * w - 1) / (2 * w + 1)) for i in range(len(stations) - 1)) + math.ceil(max(0, stations[0] - w - 1) / (2 * w + 1)) + math.ceil(max(0, n - stations[-1] - w) / (2 * w + 1))
