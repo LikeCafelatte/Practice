@@ -175,3 +175,10 @@ def solution(n, s):
 import math
 def solution(n, stations, w):
     return sum(math.ceil((stations[i + 1] - stations[i] - 2 * w - 1) / (2 * w + 1)) for i in range(len(stations) - 1)) + math.ceil(max(0, stations[0] - w - 1) / (2 * w + 1)) + math.ceil(max(0, n - stations[-1] - w) / (2 * w + 1))
+
+
+# 행렬의 곱셈
+# https://school.programmers.co.kr/learn/courses/30/lessons/12949
+
+def solution(arr1, arr2):
+    return [[sum(arr1[k][j] * arr2[j][i] for j in range(len(arr2))) for i in range(len(arr2[0]))] for k in range(len(arr1))]
