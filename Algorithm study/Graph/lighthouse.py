@@ -21,3 +21,10 @@ def solution(n, lighthouse):
                 total += 1
         answer = min(answer, total)
     return answer
+
+class Node:
+    def __init__(self):
+        self.leafnodes = []
+    
+    def add_node(self, leafnode):
+        self.leafnodes.append(leafnode)
