@@ -22,67 +22,6 @@ def solution(n, lighthouse):
         answer = min(answer, total)
     return answer
 
-class Node:
-    def __init__(self):
-        self.leafnodes = []
-    
-    def add_node(self, leafnode):
-        self.leafnodes.append(leafnode)
-
-
-
-
-import sys
-sys.setrecursionlimit(10**7)
-def solution(n, lighthouse):
-    answer = n
-    link = [[] for i in range(n + 1)]
-    for a, b in lighthouse:
-        link[a].append(b)
-        link[b].append(a)
-    for idx, leafs in enumerate(link):
-        print(idx, leafs)
-    headnode = Node(1, 1)
-    headnode.add_node(link)
-    #for leaf in link[headnode.id]:
-    #    headnode.add_node(Node(leaf))
-    return headnode.print_tree()
-
-class Node:
-    def __init__(self, id, parent):
-        self.leafnodes = []
-        self.id = id
-        self.parent = parent
-        self.light = False
-        self.state = False
-    
-    def add_node(self, link):
-        for leafnode in link[self.id]:
-            if leafnode != self.parent:
-                self.leafnodes.append(Node(leafnode, self.id))
-                self.leafnodes[-1].add_node(link)
-    def print_tree(self):
-        print(self.id, len(self.leafnodes))
-        answer = 1 if self.leafnodes else 0
-        for leaf in self.leafnodes:
-            answer += leaf.print_tree()
-        return answer
-    def turn_on(self):
-        answer = 0
-        if self.leafnodes:
-            for leaf in self.leafnodes:
-                if leaf.leafnodes:
-                    answer += leaf.turn_on()
-                else:
-                    if leaf.light:
-                        self.state = True
-                    if not leaf.state:
-                        self.light = True
-                        answer += 1
-                        leaf.state = True
-        else:
-            return answer
-
 
 
 import sys
